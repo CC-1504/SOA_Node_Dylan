@@ -1,0 +1,42 @@
+version: "3.8"
+volumes:
+  redis:
+    driver: local
+
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: db
+      RABBITMQ_HOST: rabbitmq
+    ports:
+      - "5432:5432"
+    networks:
+      - SOA
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_HOST: rabbitmq
+    networks:
+      - SOA
+
+  redis:
+    image: redis
+    container_name: 'redis'
+    ports:
+      - "6379:6379"
+    volumes: 
+      - redis:/data
+    networks:
+      - SOA
+
+networks:
+  SOA:
